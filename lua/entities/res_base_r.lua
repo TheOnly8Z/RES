@@ -44,6 +44,7 @@ if SERVER then
         local phys = self:GetPhysicsObject()
         if not phys then self:Remove() return end
 
+        phys:SetMaterial("gmod_silent")
         phys:SetMass(25)
         phys:Wake()
     end
@@ -51,8 +52,10 @@ if SERVER then
     function ENT:PhysicsCollide(colData, collider)
         -- https://github.com/ValveSoftware/source-sdk-2013/blob/master/sp/src/game/server/physics.cpp
         if colData.DeltaTime >= 0.05 and colData.Speed >= 70 then
+            local resTbl = RES.Resource[self.Resource]
+
             -- can't use EmitSound since volume is not controllable with soundscripts
-            local surfdata = util.GetSurfaceData(colData.OurSurfaceProps)
+            local surfdata = resTbl.SurfaceData or util.GetSurfaceData(util.GetSurfaceIndex(resTbl.SurfaceProp or "plastic"))
             if self.ImpactSound then self.ImpactSound:Stop() end
             self.ImpactSound = CreateSound(self, colData.Speed > 200 and surfdata.impactHardSound or surfdata.impactSoftSound)
             self.ImpactSound:PlayEx(math.Clamp(colData.Speed / 320, 0, 1), 100)

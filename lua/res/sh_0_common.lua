@@ -7,11 +7,13 @@ RES.Resource = {
         Name = "Wood",
         SubCategory = "Crude Resource",
         Material = "phoenix_storms/wood",
+        SurfaceProp = "wood",
     },
     ["scrap"] = {
         Name = "Scrap",
         SubCategory = "Crude Resource",
         Material = "models/props_pipes/pipesystem01a_skin2",
+        SurfaceProp = "metal",
     },
     ["oil"] = {
         Name = "Crude Oil",
@@ -22,11 +24,13 @@ RES.Resource = {
         Name = "Detritus",
         SubCategory = "Crude Resource",
         Material = "models/props_wasteland/dirtwall001a",
+        SurfaceProp = "dirt",
     },
     ["ore"] = {
         Name = "Ore",
         SubCategory = "Crude Resource",
         Material = "models/props_wasteland/rockgranite02a",
+        SurfaceProp = "rock",
     },
 
     -----------------------------------
@@ -36,21 +40,25 @@ RES.Resource = {
         Name = "Coal",
         SubCategory = "Reclaimed Resource",
         Material = "phoenix_storms/road",
+        SurfaceProp = "dirt",
     },
     ["metal"] = {
         Name = "Metal",
         SubCategory = "Reclaimed Resource",
         Material = "models/props_rooftop/rooftopcluster01a",
+        SurfaceProp = "metal",
     },
     ["fuel"] = {
         Name = "Fuel",
         SubCategory = "Reclaimed Resource",
         Model = "models/props_junk/metalgascan.mdl",
+        SurfaceProp = "metal",
     },
     ["glass"] = {
         Name = "Glass",
         SubCategory = "Reclaimed Resource",
         Material = "phoenix_storms/glass",
+        SurfaceProp = "glass",
     },
     ["polymer"] = {
         Name = "Polymer",
@@ -61,6 +69,7 @@ RES.Resource = {
         Name = "Cement",
         SubCategory = "Reclaimed Resource",
         Material = "phoenix_storms/concrete0",
+        SurfaceProp = "concrete",
     },
 
     -----------------------------------
@@ -70,6 +79,7 @@ RES.Resource = {
         Name = "Refined Metal",
         SubCategory = "Refined Resource",
         Material = "phoenix_storms/dome",
+        SurfaceProp = "metal",
     },
     ["polymer_2"] = {
         Name = "Refined Polymer",
