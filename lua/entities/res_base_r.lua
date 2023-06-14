@@ -23,6 +23,24 @@ if SERVER then
 
     ENT.Dying = false
 
+    function ENT:SizeToAmount()
+        if RES.Resource[self.Resource].ScaleModel then
+            self:SetModelScale(Lerp(math.Clamp(self:GetAmount() / (RES.Resource[self.Resource].Maximum or RES.ResourceBoxMaximum), 0, 1), 0.25, 1), 0)
+            self:Activate()
+        end
+    end
+
+    function ENT:SpawnFunction(ply, tr, class)
+        if not tr.Hit then return end
+        local pos = tr.HitPos + tr.HitNormal * 16
+        local ang = Angle(0, ply:EyeAngles().y, 0)
+        local ent = ents.Create(class)
+        ent:SetPos(pos)
+        ent:SetAngles(ang)
+        ent:SetAmount(RES.ResourceBoxSpawnAmount)
+        ent:Spawn()
+    end
+
     function ENT:Initialize()
 
         local resTbl = RES.Resource[self.Resource]
@@ -47,9 +65,28 @@ if SERVER then
         phys:SetMaterial("gmod_silent")
         phys:SetMass(25)
         phys:Wake()
+
+        self:SizeToAmount()
     end
 
     function ENT:PhysicsCollide(colData, collider)
+
+        local ent = colData.HitEntity
+        if self:IsPlayerHolding() and ent:GetClass() == self:GetClass() and not ent.Dying then
+
+            local max = RES.Resource[self.Resource].Maximum or RES.ResourceBoxMaximum
+            local take = math.min(max - self:GetAmount(), ent:GetAmount())
+
+            self:SetAmount(self:GetAmount() + take)
+            ent:SetAmount(ent:GetAmount() - take)
+            if ent:GetAmount() <= 0 then
+                ent.Dying = true
+                SafeRemoveEntity(ent)
+            end
+
+            self:SizeToAmount()
+        end
+
         -- https://github.com/ValveSoftware/source-sdk-2013/blob/master/sp/src/game/server/physics.cpp
         if colData.DeltaTime >= 0.05 and colData.Speed >= 70 then
             local resTbl = RES.Resource[self.Resource]

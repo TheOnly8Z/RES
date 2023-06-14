@@ -14,9 +14,10 @@ end
 RES.GenerateEntities()
 hook.Add("InitPostEntity", "res_resource", RES.GenerateEntities)
 
-function RES.Salvage(prop)
-    local mdl = prop:GetModel()
-
-    -- TODO check for special salvage properties
-
+function RES.CreateResource(pos, restype, amt)
+    local ent = ents.Create("res_r_" .. restype)
+    ent:SetAmount(amt or 1)
+    ent:SetPos(pos)
+    ent:SetAngles(Angle(0, math.Rand(-180, 180), 0))
+    ent:Spawn()
 end

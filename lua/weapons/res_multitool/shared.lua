@@ -2,18 +2,23 @@ AddCSLuaFile()
 
 DEFINE_BASECLASS(SWEP.Base)
 
-SWEP.PrintName = "RES Multitool"
+SWEP.PrintName = "Resource Multitool"
 SWEP.Spawnable = true
+
+SWEP.Purpose = "Salvage and construct."
+SWEP.Instructions = "Left click on a prop to salvage."
 
 SWEP.ViewModel = "models/weapons/c_crowbar.mdl"
 SWEP.WorldModel = "models/weapons/w_crowbar.mdl"
 
-SWEP.Primary.Automatic = false
+SWEP.UseHands = true
+
+SWEP.Primary.Automatic = true
 SWEP.Primary.ClipSize = -1
 SWEP.Primary.Ammo = ""
 SWEP.Primary.DefaultClip = 1
 
-SWEP.Secondary.Automatic = false
+SWEP.Secondary.Automatic = true
 SWEP.Secondary.ClipSize = -1
 SWEP.Secondary.Ammo = ""
 
@@ -81,6 +86,26 @@ function SWEP:WeaponIdle()
 end
 
 function SWEP:PrimaryAttack()
+    local tr = util.TraceHull({
+        start = self:GetOwner():GetShootPos(),
+        endpos = self:GetOwner():GetShootPos() + self:GetOwner():GetAimVector() * 72,
+        filter = {self, self:GetOwner()},
+        mask = MASK_SHOT_HULL,
+        mins = Vector(-8, -8, -8),
+        maxs = Vector(8, 8, 8),
+    })
+    local ent = tr.Entity
+    if IsValid(ent) and ent:RES_CanSalvage() then
+
+        ent:SetNWFloat("RES.Salvage", ent:GetNWFloat("RES.Salvage", 0) + ent:RES_GetSalvageStrength())
+        self:SetWeaponAnim(ACT_VM_HITCENTER)
+        self:SetNextPrimaryFire(CurTime() + 0.5)
+
+        print(ent:GetNWFloat("RES.Salvage", 0))
+        if ent:GetNWFloat("RES.Salvage", 0) >= 1 then
+            ent:RES_Salvage()
+        end
+    end
 end
 
 function SWEP:SecondaryAttack()
