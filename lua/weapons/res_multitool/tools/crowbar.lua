@@ -62,6 +62,8 @@ SWEP.Tools.Crowbar.PrimaryAttack = function(self)
 
         if ent:GetNWFloat("RES.Salvage", 0) >= 1 then
             ent:RES_Salvage()
+        else
+            ent:GetPhysicsObject():ApplyForceCenter(tr.Normal * 2000 + VectorRand() * 1000)
         end
     end
 end

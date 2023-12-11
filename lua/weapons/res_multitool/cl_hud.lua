@@ -33,8 +33,8 @@ function SWEP:DoDrawCrosshair(x, y)
             end
         end
     else
-        surface.SetDrawColor(255, 255, 255, 255)
-        surface.DrawRect(x - 2.5, y - 2.5, 5, 5)
+        -- surface.SetDrawColor(255, 255, 255, 255)
+        -- surface.DrawRect(x - 2.5, y - 2.5, 5, 5)
     end
 end
 

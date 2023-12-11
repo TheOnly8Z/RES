@@ -19,7 +19,7 @@ RES.Resource = {
     ["wood"] = {
         Name = "Wood",
         Tier = RES.Tier.Crude,
-        Material = "phoenix_storms/wood",
+        Material = "phoenix_storms/white_brushes",
         SurfaceProp = "wood",
         ScaleModel = true,
     },
@@ -119,7 +119,7 @@ RES.Resource = {
     ["explosives"] = {
         Name = "Explosives",
         Tier = RES.Tier.Refined,
-        Material = "phoenix_storms/plastic",
+        Material = "phoenix_storms/egg",
         ScaleModel = true,
     },
 }
