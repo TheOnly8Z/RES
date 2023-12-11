@@ -1,8 +1,15 @@
+RES.Tier = {
+    Special = 0,
+    Crude = 1,
+    Processed = 2,
+    Refined = 3,
+}
+
 RES.Resource = {
 
     ["power"] = {
         Name = "Power",
-        SubCategory = "Special Resource",
+        Tier = RES.Tier.Special,
         Model = "models/items/car_battery01.mdl",
     },
 
@@ -11,33 +18,33 @@ RES.Resource = {
     -----------------------------------
     ["wood"] = {
         Name = "Wood",
-        SubCategory = "Crude Resource",
+        Tier = RES.Tier.Crude,
         Material = "phoenix_storms/wood",
         SurfaceProp = "wood",
         ScaleModel = true,
     },
     ["scrap"] = {
         Name = "Scrap",
-        SubCategory = "Crude Resource",
+        Tier = RES.Tier.Crude,
         Material = "models/props_pipes/pipesystem01a_skin2",
         SurfaceProp = "metal",
         ScaleModel = true,
     },
     ["oil"] = {
-        Name = "Crude Oil",
-        SubCategory = "Crude Resource",
+        Name = "Oil",
+        Tier = RES.Tier.Crude,
         Model = "models/props_junk/plasticbucket001a.mdl",
     },
     ["detritus"] = {
         Name = "Detritus",
-        SubCategory = "Crude Resource",
+        Tier = RES.Tier.Crude,
         Material = "models/props_wasteland/dirtwall001a",
         SurfaceProp = "dirt",
         ScaleModel = true,
     },
     ["ore"] = {
         Name = "Ore",
-        SubCategory = "Crude Resource",
+        Tier = RES.Tier.Crude,
         Material = "models/props_wasteland/rockgranite02a",
         SurfaceProp = "rock",
         ScaleModel = true,
@@ -48,58 +55,70 @@ RES.Resource = {
     -----------------------------------
     ["coal"] = {
         Name = "Coal",
-        SubCategory = "Reclaimed Resource",
+        Tier = RES.Tier.Processed,
         Material = "phoenix_storms/road",
         SurfaceProp = "dirt",
         ScaleModel = true,
     },
     ["metal"] = {
         Name = "Metal",
-        SubCategory = "Reclaimed Resource",
+        Tier = RES.Tier.Processed,
         Material = "models/props_rooftop/rooftopcluster01a",
         SurfaceProp = "metal",
         ScaleModel = true,
     },
     ["fuel"] = {
         Name = "Fuel",
-        SubCategory = "Reclaimed Resource",
+        Tier = RES.Tier.Processed,
         Model = "models/props_junk/metalgascan.mdl",
         SurfaceProp = "metal",
     },
     ["glass"] = {
         Name = "Glass",
-        SubCategory = "Reclaimed Resource",
+        Tier = RES.Tier.Processed,
         Material = "phoenix_storms/glass",
         SurfaceProp = "glass",
         ScaleModel = true,
     },
-    ["polymer"] = {
-        Name = "Polymer",
-        SubCategory = "Reclaimed Resource",
+    ["plastic"] = {
+        Name = "Plastic",
+        Tier = RES.Tier.Processed,
         Material = "hunter/myplastic",
         ScaleModel = true,
     },
     ["cement"] = {
         Name = "Cement",
-        SubCategory = "Reclaimed Resource",
+        Tier = RES.Tier.Processed,
         Material = "phoenix_storms/concrete0",
         SurfaceProp = "concrete",
         ScaleModel = true,
+    },
+    ["chemicals"] = {
+        Name = "Chemicals",
+        Tier = RES.Tier.Processed,
+        Model = "models/props_junk/garbage_plasticbottle002a.mdl",
+        ScaleModel = false,
     },
 
     -----------------------------------
     -- Refined
     -----------------------------------
-    ["metal_2"] = {
-        Name = "Refined Metal",
-        SubCategory = "Refined Resource",
+    ["steel"] = {
+        Name = "Steel",
+        Tier = RES.Tier.Refined,
         Material = "phoenix_storms/dome",
         SurfaceProp = "metal",
         ScaleModel = true,
     },
-    ["polymer_2"] = {
-        Name = "Refined Polymer",
-        SubCategory = "Refined Resource",
+    ["polymer"] = {
+        Name = "Polymer",
+        Tier = RES.Tier.Refined,
+        Material = "phoenix_storms/plastic",
+        ScaleModel = true,
+    },
+    ["explosives"] = {
+        Name = "Explosives",
+        Tier = RES.Tier.Refined,
         Material = "phoenix_storms/plastic",
         ScaleModel = true,
     },
@@ -273,7 +292,7 @@ RES.MaterialSalvage = {
     ["default"] = {
         ["wood"] = 0.4,
         ["scrap"] = 0.4,
-        ["polymer"] = 0.3,
+        ["plastic"] = 0.3,
     },
     ["advisor_shield"] = {
         ["metal"] = 0.5,
@@ -294,7 +313,7 @@ RES.MaterialSalvage = {
         ["glass"] = 2,
     },
     ["tile"] = {
-        ["polymer"] = 0.5,
+        ["plastic"] = 0.5,
         ["wood"] = 0.5,
     },
     ["paper"] = {
@@ -307,29 +326,29 @@ RES.MaterialSalvage = {
         ["wood"] = 0.5,
     },
     ["plaster"] = {
-        ["polymer"] = 0.5,
+        ["plastic"] = 0.5,
         ["wood"] = 0.5,
     },
     ["plastic_barrel"] = {
-        ["polymer"] = 1,
+        ["plastic"] = 1,
     },
     ["plastic_barrel_buoyant"] = {
-        ["polymer"] = 1,
+        ["plastic"] = 1,
     },
     ["plastic_box"] = {
-        ["polymer"] = 1,
+        ["plastic"] = 1,
     },
     ["plastic"] = {
-        ["polymer"] = 1,
+        ["plastic"] = 1,
     },
     ["rubber"] = {
-        ["polymer"] = 1,
+        ["plastic"] = 1,
     },
     ["rubbertire"] = {
-        ["polymer"] = 1,
+        ["plastic"] = 1,
     },
     ["plastic"] = {
-        ["polymer"] = 1,
+        ["plastic"] = 1,
     },
     ["porcelain"] = {
         ["cement"] = 0.5,
@@ -339,24 +358,24 @@ RES.MaterialSalvage = {
         ["wood"] = 1,
     },
     ["ceiling_tile"] = {
-        ["polymer"] = 0.5,
+        ["plastic"] = 0.5,
         ["wood"] = 0.5,
     },
     ["computer"] = {
         ["metal"] = 0.5,
-        ["polymer"] = 0.5,
+        ["plastic"] = 0.5,
     },
     ["pottery"] = {
         ["glass"] = 0.5,
-        ["polymer"] = 0.5,
+        ["plastic"] = 0.5,
     },
     ["weapon"] = {
         ["metal"] = 0.5,
-        ["polymer"] = 0.5,
+        ["plastic"] = 0.5,
     },
     ["item"] = {
         ["metal"] = 0.5,
-        ["polymer"] = 0.5,
+        ["plastic"] = 0.5,
     },
 }
 

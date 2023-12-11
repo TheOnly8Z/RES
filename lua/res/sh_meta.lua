@@ -1,7 +1,8 @@
 local ENTITY = FindMetaTable("Entity")
 
 function ENTITY:RES_CanSalvage()
-    return self:GetClass() == "prop_physics"
+    if self:GetClass() == "prop_physics" then return true end
+    return false
 end
 
 function ENTITY:RES_GetSalvageStrength()
