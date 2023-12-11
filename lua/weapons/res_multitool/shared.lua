@@ -4,8 +4,11 @@ AddCSLuaFile("sh_tools.lua")
 include("sh_tools.lua")
 
 AddCSLuaFile("cl_toolwheel.lua")
+AddCSLuaFile("cl_hud.lua")
+
 if CLIENT then
     include("cl_toolwheel.lua")
+    include("cl_hud.lua")
 end
 
 

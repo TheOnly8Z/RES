@@ -63,11 +63,6 @@ end
 SWEP.MenuAlpha = 0
 SWEP.MenuKey = IN_RELOAD
 
-function SWEP:DrawHUDBackground()
-    self:DrawToolWheel()
-end
-
-
 local cur_tool
 local cur_ind
 local lastmenu

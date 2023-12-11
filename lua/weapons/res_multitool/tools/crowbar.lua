@@ -19,26 +19,47 @@ SWEP.Tools.Crowbar.Deploy = function(self)
     return true
 end
 
+SWEP.Tools.Crowbar.Highlight = function(self, ent)
+    if IsValid(ent) and ent:RES_CanSalvage() then
+        local info = ent:RES_GetSalvageInfo()
+        if not info then return end -- pending or not valid
+        local lines = {}
+        for k, v in pairs(info[2]) do
+            table.insert(lines, RES.Resource[k].Name .. ": " .. v)
+        end
+
+        local prog = ent:GetNWFloat("RES.Salvage", 0)
+
+        return {
+            Glow = true,
+            Hint = prog > 0 and (math.floor(prog * 100) .. "%") or "Salvagable",
+            Progress = prog > 0 and ent:GetNWFloat("RES.Salvage", 0) or nil,
+            Lines = #lines > 0 and lines or nil,
+        }
+    end
+end
+
 SWEP.Tools.Crowbar.PrimaryAttack = function(self)
     local owner = self:GetOwner()
-    local tr = util.TraceHull({
-        start = owner:GetShootPos(),
-        endpos = owner:GetShootPos() + owner:GetAimVector() * 72,
-        filter = {self, owner},
-        mask = MASK_SHOT_HULL,
-        mins = Vector(-8, -8, -8),
-        maxs = Vector(8, 8, 8),
-    })
-    local ent = tr.Entity
-    if IsValid(ent) and ent:RES_CanSalvage() then
+    local tr = owner:GetEyeTrace()
 
-        ent:SetNWFloat("RES.Salvage", ent:GetNWFloat("RES.Salvage", 0) + ent:RES_GetSalvageStrength())
+    -- local tr = util.TraceHull({
+    --     start = owner:GetShootPos(),
+    --     endpos = owner:GetShootPos() + owner:GetAimVector() * 128,
+    --     filter = {self, owner},
+    --     mask = MASK_SOLID,
+    --     mins = Vector(-8, -8, -8),
+    --     maxs = Vector(8, 8, 8),
+    -- })
+    local ent = tr.Entity
+    if IsValid(ent) and tr.HitPos:DistToSqr(owner:EyePos()) <= 128 * 128 and ent:RES_CanSalvage() then
+        local info = ent:RES_GetSalvageInfo()
+        if not info then return end
+        ent:SetNWFloat("RES.Salvage", ent:GetNWFloat("RES.Salvage", 0) + 1 / info[1])
         self:SetWeaponAnim(ACT_VM_HITCENTER)
         self:SetNextPrimaryFire(CurTime() + 0.5)
         owner:DoAnimationEvent(ACT_HL2MP_GESTURE_RANGE_ATTACK_MELEE)
 
-
-        print(ent:GetNWFloat("RES.Salvage", 0))
         if ent:GetNWFloat("RES.Salvage", 0) >= 1 then
             ent:RES_Salvage()
         end
@@ -46,9 +67,7 @@ SWEP.Tools.Crowbar.PrimaryAttack = function(self)
 end
 
 SWEP.Tools.Crowbar.SecondaryAttack = function(self)
-
 end
 
 SWEP.Tools.Crowbar.Think = function(self)
-
 end
