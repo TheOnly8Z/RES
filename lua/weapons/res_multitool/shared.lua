@@ -1,5 +1,14 @@
 AddCSLuaFile()
 
+AddCSLuaFile("sh_tools.lua")
+include("sh_tools.lua")
+
+AddCSLuaFile("cl_toolwheel.lua")
+if CLIENT then
+    include("cl_toolwheel.lua")
+end
+
+
 DEFINE_BASECLASS(SWEP.Base)
 
 SWEP.PrintName = "Resource Multitool"
@@ -25,91 +34,61 @@ SWEP.Secondary.Ammo = ""
 SWEP.HoldType = "slam"
 
 function SWEP:SetupDataTables()
+    self:NetworkVar("Int", 0, "ToolIndex")
     self:NetworkVar("Float", 0, "WeaponIdleTime")
 end
 
 function SWEP:Initialize()
     -- engine deploy blocks weapon from thinking and doing most stuff
-    self.m_WeaponDeploySpeed = 255
-    self:SetHoldType(self.HoldType)
+    -- self.m_WeaponDeploySpeed = 255
+    self:SetCurrentTool(1)
 end
 
 function SWEP:Deploy()
     local owner = self:GetOwner()
     if not owner or not owner:IsPlayer() then return end
 
-    self:SetHoldType(self.HoldType)
-    self:SetWeaponAnim(ACT_VM_DEPLOY)
+    self:ApplyCurrentTool()
 
-    local vm = owner:GetViewModel(self:ViewModelIndex())
-    local rate = 1
-    if vm:IsValid() then
-        vm:SetPlaybackRate(rate)
-        self:SetWeaponIdleTime(CurTime() + (self:SequenceDuration() * (1 / rate)))
+    local tool = self:GetCurrentTool()
+
+    if tool.DeployAnim then
+        self:SetWeaponAnim(tool.DeployAnim, self:GetDeploySpeed(), true)
     end
-    self:SetNextPrimaryFire(CurTime() + self:SequenceDuration() * (1 / rate) * 0.9)
+    if tool.DeployGesture then
+        owner:DoAnimationEvent(tool.DeployGesture)
+    end
+
+    if isfunction(tool.Deploy) then
+        return tool.Deploy(self)
+    end
 
     return true
 end
 
-function SWEP:SetWeaponAnim(idealAct, flPlaybackRate)
-    local idealSequence = self:SelectWeightedSequence(idealAct)
-    if idealSequence == -1 then return false end
+function SWEP:SetWeaponAnim(idealAct, flPlaybackRate, wait)
     flPlaybackRate = isnumber(flPlaybackRate) and flPlaybackRate or 1
-
-    self:SendWeaponAnim(idealAct)
-    self:SendViewModelMatchingSequence(idealSequence)
-
     local owner = self:GetOwner()
-    if owner:IsValid() then
-        local vm = owner:GetViewModel()
-        if vm:IsValid() and idealSequence then
+    if not IsValid(owner) then return end
+
+    local dur = 0
+
+    local vm = owner:GetViewModel()
+    if IsValid(vm) then
+        local idealSequence = vm:SelectWeightedSequence(idealAct)
+        if idealSequence ~= -1 then
             vm:SendViewModelMatchingSequence(idealSequence)
             vm:SetPlaybackRate(flPlaybackRate)
+            dur = vm:SequenceDuration()
         end
     end
 
     -- Set the next time the weapon will idle
-    self:SetWeaponIdleTime(CurTime() + (self:SequenceDuration() * flPlaybackRate))
-    return true
-end
+    self:SetWeaponIdleTime(CurTime() + dur / flPlaybackRate)
 
-function SWEP:Think()
-    self:WeaponIdle()
-end
-
-function SWEP:WeaponIdle()
-    if self:GetWeaponIdleTime() > CurTime() then return end
-
-    self:SetWeaponIdleTime(math.huge) -- it's looping anyways
-    self:SetWeaponAnim(ACT_VM_IDLE)
-end
-
-function SWEP:PrimaryAttack()
-    local tr = util.TraceHull({
-        start = self:GetOwner():GetShootPos(),
-        endpos = self:GetOwner():GetShootPos() + self:GetOwner():GetAimVector() * 72,
-        filter = {self, self:GetOwner()},
-        mask = MASK_SHOT_HULL,
-        mins = Vector(-8, -8, -8),
-        maxs = Vector(8, 8, 8),
-    })
-    local ent = tr.Entity
-    if IsValid(ent) and ent:RES_CanSalvage() then
-
-        ent:SetNWFloat("RES.Salvage", ent:GetNWFloat("RES.Salvage", 0) + ent:RES_GetSalvageStrength())
-        self:SetWeaponAnim(ACT_VM_HITCENTER)
-        self:SetNextPrimaryFire(CurTime() + 0.5)
-
-        print(ent:GetNWFloat("RES.Salvage", 0))
-        if ent:GetNWFloat("RES.Salvage", 0) >= 1 then
-            ent:RES_Salvage()
-        end
+    if wait then
+        self:SetNextPrimaryFire(CurTime() + dur / flPlaybackRate)
     end
-end
 
-function SWEP:SecondaryAttack()
-end
-
-function SWEP:Reload()
+    return true
 end
