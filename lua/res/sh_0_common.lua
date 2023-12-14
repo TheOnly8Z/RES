@@ -19,9 +19,10 @@ RES.Resource = {
     ["wood"] = {
         Name = "Wood",
         Tier = RES.Tier.Crude,
-        Material = "phoenix_storms/white_brushes",
+        -- Material = "phoenix_storms/white_brushes",
         SurfaceProp = "wood",
-        ScaleModel = true,
+        Model = "models/gibs/wood_gib01a.mdl",
+        ScaleModel = 1.5,
     },
     ["scrap"] = {
         Name = "Scrap",
@@ -38,23 +39,26 @@ RES.Resource = {
     ["detritus"] = {
         Name = "Detritus",
         Tier = RES.Tier.Crude,
+        Model = "models/props_junk/rock001a.mdl",
         Material = "models/props_wasteland/dirtwall001a",
         SurfaceProp = "dirt",
-        ScaleModel = true,
+        ScaleModel = 3,
     },
     ["sand"] = {
         Name = "Sand",
         Tier = RES.Tier.Crude,
+        Model = "models/props_junk/rock001a.mdl",
         Material = "res/res_sand",
         SurfaceProp = "sand",
-        ScaleModel = true,
+        ScaleModel = 3,
     },
     ["ore"] = {
         Name = "Ore",
         Tier = RES.Tier.Crude,
+        Model = "models/props_junk/rock001a.mdl",
         Material = "models/props_wasteland/rockgranite02a",
         SurfaceProp = "rock",
-        ScaleModel = true,
+        ScaleModel = 3,
     },
 
     -----------------------------------

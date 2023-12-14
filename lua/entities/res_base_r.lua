@@ -6,6 +6,10 @@ ENT.Base = nil
 ENT.PrintName = "RES Resource"
 ENT.Spawnable = false
 
+ENT.RenderGroup = RENDERGROUP_TRANSLUCENT
+
+ENT.RESResource = true
+
 ENT.Resource = ""
 
 ENT.PropertyBlacklist = {
@@ -38,7 +42,8 @@ if SERVER then
 
     function ENT:SizeToAmount()
         if RES.Resource[self.Resource].ScaleModel then
-            self:SetModelScale(Lerp(math.Clamp(self:GetAmount() / self:GetMaxAmount(), 0, 1), 0.25, 1), 0)
+            local scale = tonumber(RES.Resource[self.Resource].ScaleModel) or 1
+            self:SetModelScale(Lerp(math.Clamp(self:GetAmount() / self:GetMaxAmount(), 0, 1), scale * 0.25, scale), 0)
             self:Activate()
         end
     end
@@ -64,6 +69,7 @@ if SERVER then
         self:PhysicsInit(SOLID_VPHYSICS)
         self:SetUseType(SIMPLE_USE)
         self:SetCollisionGroup(COLLISION_GROUP_NONE)
+        self:DrawShadow(false)
 
         if resTbl.Material then
             self:SetMaterial(resTbl.Material)
@@ -150,6 +156,35 @@ else
             table.remove(RES.ResourceEntityCache, self.CacheIndex)
         end
     end
+
+    local d = 128 * 128
+    local d2 = 96 * 96
+    function ENT:Draw()
+        self:DrawModel()
+
+        local pos = self:GetPos()
+        local toscreen = pos:ToScreen()
+        self.ResourceText = false
+        if not toscreen.visible then return end
+        local distSqr = EyePos():DistToSqr(pos)
+        if distSqr <= d then
+            toscreen.alpha = Lerp((distSqr - d2) / (d - d2), 1, 0) ^ 0.5
+            self.ResourceText = toscreen
+        end
+    end
+
+    local outline = Color(0, 0, 0, 150)
+    local textclr = Color(255, 255, 255, 255)
+    hook.Add( "HUDPaint", "RES_DrawResources", function()
+        for _, ent in ipairs(RES.ResourceEntityCache) do
+            if not IsValid(ent) or not ent.ResourceText then continue end
+            local data = ent.ResourceText
+            textclr.a = data.alpha * 255
+            outline.a = data.alpha * 150
+            draw.SimpleTextOutlined(RES.Resource[ent.Resource].Name, "TacRP_Myriad_Pro_6", data.x, data.y, textclr, TEXT_ALIGN_CENTER, TEXT_ALIGN_BOTTOM, 1, outline)
+            draw.SimpleTextOutlined(ent:GetAmount(), "TacRP_Myriad_Pro_6", data.x, data.y, textclr, TEXT_ALIGN_CENTER, TEXT_ALIGN_TOP, 1, outline)
+        end
+    end )
 end
 
 function ENT:CanProperty(ply, prop)

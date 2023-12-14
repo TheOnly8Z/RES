@@ -63,8 +63,7 @@ SWEP.Tools.ETool.PrimaryAttack = function(self)
         end
 
         self:SetNWFloat("RES_DigAmount", self:GetNWFloat("RES_DigAmount", 0) + 1 / RES.SurfaceHarvest[surfaceprop][1])
-
-        if self:GetNWFloat("RES_DigAmount", 0) >= 1 then
+        if self:GetNWFloat("RES_DigAmount", 0) + 0.000001 >= 1 then -- frigging floating point imprecisions
             self:SetNWVector("RES_LastDigPos", nil)
             self:SetNWFloat("RES_DigAmount", 0)
             self:SetNWString("RES_LastDigSurface", nil)
