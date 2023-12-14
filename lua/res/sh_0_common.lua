@@ -42,6 +42,13 @@ RES.Resource = {
         SurfaceProp = "dirt",
         ScaleModel = true,
     },
+    ["sand"] = {
+        Name = "Sand",
+        Tier = RES.Tier.Crude,
+        Material = "res/res_sand",
+        SurfaceProp = "sand",
+        ScaleModel = true,
+    },
     ["ore"] = {
         Name = "Ore",
         Tier = RES.Tier.Crude,
@@ -211,7 +218,9 @@ RES.MaterialSalvage = {
         ["scrap"] = 1,
     },
     ["metalvehicle"] = {
-        ["scrap"] = 1,
+        ["scrap"] = 0.7,
+        ["metal"] = 0.2,
+        ["oil"] = 0.1,
     },
     ["roller"] = {
         ["metal"] = 1,
@@ -393,6 +402,76 @@ RES.SpecialSalvage = {
     --         ["scrap"] = 1,
     --     },
     -- }
+}
+
+RES.SurfaceHarvest = {
+    ["boulder"] = {
+        6,
+        {
+            ["ore"] = 0.5,
+            ["detritus"] = 1,
+        },
+    },
+    ["rock"] = {
+        5,
+        {
+            ["detritus"] = 1,
+            ["ore"] = 0.3,
+        }
+    },
+    ["cavern_rock"] = {
+        8,
+        {
+            ["detritus"] = 1,
+            ["ore"] = 0.7,
+        },
+    },
+
+    ["dirt"] = {
+        3,
+        {
+            ["detritus"] = 1,
+        },
+    },
+    ["grass"] = {
+        3,
+        {
+            ["detritus"] = 1,
+        },
+    },
+    ["sand"] = {
+        3,
+        {
+            ["sand"] = 1,
+        },
+    },
+    ["gravel"] = {
+        4,
+        {
+            ["sand"] = 0.2,
+            ["detritus"] = 0.7,
+            ["ore"] = 0.1,
+        },
+    },
+    ["mud"] = {
+        2,
+        {
+            ["detritus"] = 0.8,
+            ["sand"] = 0.2,
+        },
+    },
+    ["quicksand"] = {
+        2,
+        {
+            ["sand"] = 1,
+        },
+    },
+    ["antlionsand"] = {
+        2,
+        {
+            ["sand"] = 1,
+        },
+    },
 }
 
 RES.SpecialSalvageLookup = {}

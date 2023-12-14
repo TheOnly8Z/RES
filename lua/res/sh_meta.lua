@@ -27,7 +27,7 @@ function ENTITY:RES_GetSalvageInfo()
 
         self.RES_SalvageInfo = {} -- strength, output
 
-        local strfrommass = math.Clamp((phys:GetMass() ^ 0.5) / 5, 0, 20)
+        local strfrommass = math.Clamp((phys:GetMass() ^ 0.75) / 5, 0, 50)
         local strfrombound = math.Clamp(self:GetModelRadius() ^ 0.5 - 4, 0, 15)
         self.RES_SalvageInfo[1] = strfrommass + strfrombound
 
@@ -40,8 +40,8 @@ function ENTITY:RES_GetSalvageInfo()
         end
         self.RES_SalvageInfo[2] = table.Copy(res)
 
-        local amtfrommass = math.Clamp((phys:GetMass() ^ 0.5) / 4, 0, 30)
-        local amtfrombound = math.Clamp(self:GetModelRadius() ^ 0.5, 0, 20)
+        local amtfrommass = math.Clamp((phys:GetMass() ^ 0.75) / 3, 0, 100)
+        local amtfrombound = math.Clamp(self:GetModelRadius() ^ 0.75, 1, 100)
         for k, v in pairs(self.RES_SalvageInfo[2]) do
             self.RES_SalvageInfo[2][k] = math.ceil(v * (amtfrommass + amtfrombound))
         end
@@ -49,13 +49,8 @@ function ENTITY:RES_GetSalvageInfo()
     return self.RES_SalvageInfo
 end
 
-function ENTITY:RES_Salvage()
+function ENTITY:RES_Salvage(pos)
     local info = self:RES_GetSalvageInfo()
-    local pos = self:WorldSpaceCenter()
-    for restype, amt in pairs(info[2]) do
-        RES.CreateResource(pos, restype, amt)
-        pos = pos + Vector(0, 0, 24)
-    end
-
+    RES.CreateResources(info[2], pos or self:WorldSpaceCenter())
     self:Remove()
 end

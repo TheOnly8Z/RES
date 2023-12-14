@@ -19,13 +19,26 @@ function ENT:SetupDataTables()
     self:NetworkVar("Int", 0, "Amount")
 end
 
+function ENT:GetMaxAmount()
+    return RES.Resource[self.Resource].Maximum or RES.ResourceBoxMaximum
+end
+
 if SERVER then
 
     ENT.Dying = false
 
+    function ENT:AddAmount(add)
+        add = math.min(add, self:GetMaxAmount() - self:GetAmount())
+        if add > 0 then
+            self:SetAmount(self:GetAmount() + add)
+            self:SizeToAmount()
+        end
+        return add
+    end
+
     function ENT:SizeToAmount()
         if RES.Resource[self.Resource].ScaleModel then
-            self:SetModelScale(Lerp(math.Clamp(self:GetAmount() / (RES.Resource[self.Resource].Maximum or RES.ResourceBoxMaximum), 0, 1), 0.25, 1), 0)
+            self:SetModelScale(Lerp(math.Clamp(self:GetAmount() / self:GetMaxAmount(), 0, 1), 0.25, 1), 0)
             self:Activate()
         end
     end
@@ -67,21 +80,23 @@ if SERVER then
         phys:Wake()
 
         self:SizeToAmount()
+
+        self.CacheIndex = table.insert(RES.ResourceEntityCache, self)
     end
 
     function ENT:PhysicsCollide(colData, collider)
 
         local ent = colData.HitEntity
-        if self:IsPlayerHolding() and ent:GetClass() == self:GetClass() and not ent.Dying then
+        if ent:GetClass() == self:GetClass() and not ent.Dying and self:GetAmount() >= ent:GetAmount()
+                and self:GetAmount() < self:GetMaxAmount() then
 
-            local max = RES.Resource[self.Resource].Maximum or RES.ResourceBoxMaximum
-            local take = math.min(max - self:GetAmount(), ent:GetAmount())
-
-            self:SetAmount(self:GetAmount() + take)
+            local take = self:AddAmount(ent:GetAmount())
             ent:SetAmount(ent:GetAmount() - take)
             if ent:GetAmount() <= 0 then
                 ent.Dying = true
                 SafeRemoveEntity(ent)
+            else
+                ent:SizeToAmount()
             end
 
             self:SizeToAmount()
@@ -104,6 +119,9 @@ if SERVER then
             self.ImpactSound:Stop()
             self.ImpactSound = nil
         end
+        if self.CacheIndex and RES.ResourceEntityCache[self.CacheIndex] == self then
+            table.remove(RES.ResourceEntityCache, self.CacheIndex)
+        end
     end
 
     function ENT:FadeAndRemove()
@@ -117,6 +135,20 @@ if SERVER then
 
     function ENT:Use(ply)
         ply:PickupObject(self)
+    end
+
+else
+    -- This may be called on a full update. Does this check work?
+    function ENT:Initialize()
+        if not self.CacheIndex then
+            self.CacheIndex = table.insert(RES.ResourceEntityCache, self)
+        end
+    end
+
+    function ENT:OnRemove(fullUpdate)
+        if not fullUpdate and self.CacheIndex and RES.ResourceEntityCache[self.CacheIndex] == self then
+            table.remove(RES.ResourceEntityCache, self.CacheIndex)
+        end
     end
 end
 

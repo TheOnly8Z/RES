@@ -2,11 +2,10 @@ SWEP.Tools.Crowbar = {}
 
 SWEP.Tools.Crowbar.PrintName = "Crowbar"
 SWEP.Tools.Crowbar.SortOrder = 1
-SWEP.Tools.Crowbar.Icon = Material("entities/weapon_crowbar.png")
-SWEP.Tools.Crowbar.Description = [[Common tool used to break things apart.
+SWEP.Tools.Crowbar.Icon = nil --Material("entities/weapon_crowbar.png")
+SWEP.Tools.Crowbar.Description = [[Iconic tool for breaking things apart.
 
-LMB: Salvage props
-RMB: Dismantle machines]]
+LMB: Salvage props]]
 
 SWEP.Tools.Crowbar.ViewModel = "models/weapons/c_crowbar.mdl"
 SWEP.Tools.Crowbar.WorldModel = "models/weapons/w_crowbar.mdl"
@@ -33,7 +32,7 @@ SWEP.Tools.Crowbar.Highlight = function(self, ent)
         return {
             Glow = true,
             Hint = prog > 0 and (math.floor(prog * 100) .. "%") or "Salvagable",
-            Progress = prog > 0 and ent:GetNWFloat("RES.Salvage", 0) or nil,
+            Progress = prog > 0 and prog or nil,
             Lines = #lines > 0 and lines or nil,
         }
     end
@@ -61,7 +60,7 @@ SWEP.Tools.Crowbar.PrimaryAttack = function(self)
         owner:DoAnimationEvent(ACT_HL2MP_GESTURE_RANGE_ATTACK_MELEE)
 
         if ent:GetNWFloat("RES.Salvage", 0) >= 1 then
-            ent:RES_Salvage()
+            ent:RES_Salvage(tr.HitPos)
         else
             ent:GetPhysicsObject():ApplyForceCenter(tr.Normal * 2000 + VectorRand() * 1000)
         end

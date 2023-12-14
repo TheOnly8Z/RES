@@ -1,0 +1,10 @@
+"vertexlitGeneric"
+{
+	"$basetexture" "gm_construct/construct_sand"
+	"$surfaceprop" "sand"
+	"$basetexturetransform" "center 0 0 scale 0.4 0.4 rotate 0 translate 0 0"
+
+	"$detail" "gm_construct/grass_clouds"
+	"$detailblendfactor" "0.5"
+	"$detailscale" "0.12"
+}

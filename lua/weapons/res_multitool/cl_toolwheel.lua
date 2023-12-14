@@ -74,7 +74,7 @@ function SWEP:DrawToolWheel()
     local r2 = ScreenScale(40)
     local sg = ScreenScale(32)
     local ri = r * 0.667
-    local s = 45
+    local s = 18 - 72
 
     local arcdegrees = 360 / math.max(1, #self.ToolsIndex)
     local d = 360 - s
@@ -82,7 +82,7 @@ function SWEP:DrawToolWheel()
     local cursorx, cursory = input.GetCursorPos()
     local mouseangle = math.deg(math.atan2(cursorx - scrw / 2, cursory - scrh / 2))
     local mousedist = math.sqrt(math.pow(cursorx - scrw / 2, 2) + math.pow(cursory - scrh / 2, 2))
-    mouseangle = math.NormalizeAngle(360 - (mouseangle - s) + arcdegrees)
+    mouseangle = math.NormalizeAngle(-mouseangle + arcdegrees)
     if mouseangle < 0 then
         mouseangle = mouseangle + 360
     end
@@ -95,7 +95,7 @@ function SWEP:DrawToolWheel()
         end
 
         if mousedist > r2 then
-            local i = math.floor( mouseangle / arcdegrees ) + 1
+            local i = (math.floor( (mouseangle - s) / arcdegrees ) % #self.ToolsIndex) + 1
             cur_tool = self.ToolsIndex[i]
             cur_ind = i
         else
@@ -132,7 +132,7 @@ function SWEP:DrawToolWheel()
     surface.SetDrawColor(150, 150, 150, a * 100)
     draw.NoTexture()
     if cur_ind then
-        local d0 = (s - 90) - arcdegrees * (cur_ind - 2)
+        local d0 = -s -arcdegrees * (cur_ind - 1)
         slicedcircle(scrw / 2, scrh / 2, r, 32, d0, d0 + arcdegrees)
     else
         filledcircle(scrw / 2, scrh / 2, r2, 32)
@@ -142,7 +142,7 @@ function SWEP:DrawToolWheel()
     surface.DrawCircle(scrw / 2, scrh / 2, r2, 255, 255, 255, a * 255)
 
     for i = 1, self.ToolsCount do
-        local rad = math.rad( d + arcdegrees * 0.5 )
+        local rad = math.rad( d - arcdegrees * 0.5 )
 
         surface.SetDrawColor(255, 255, 255, a * 255)
         surface.DrawLine(

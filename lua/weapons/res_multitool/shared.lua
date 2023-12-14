@@ -18,7 +18,7 @@ SWEP.PrintName = "Resource Multitool"
 SWEP.Spawnable = true
 
 SWEP.Purpose = "Salvage and construct."
-SWEP.Instructions = "Left click on a prop to salvage."
+SWEP.Instructions = "Hold RELOAD to select tool mode."
 
 SWEP.ViewModel = "models/weapons/c_crowbar.mdl"
 SWEP.WorldModel = "models/weapons/w_crowbar.mdl"

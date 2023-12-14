@@ -3,7 +3,7 @@ SWEP.Tools.RBag = {}
 SWEP.Tools.RBag.PrintName = "R-Bag"
 SWEP.Tools.RBag.FullName = "Resource Bag"
 SWEP.Tools.RBag.SortOrder = 4
-SWEP.Tools.RBag.Icon = Material("entities/weapon_stunstick.png")
+SWEP.Tools.RBag.Icon = nil --Material("entities/weapon_stunstick.png")
 SWEP.Tools.RBag.Description = [[A small bag to carry some resources with you.
 
 LMB: Collect resource

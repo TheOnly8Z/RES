@@ -45,11 +45,13 @@ Most resources exist physically in the world, either as a resource block or with
 - Scrap
   - Salvaged from metal props
 - Oil
-  - Salvaged from barrel props
   - Harvested by pumpjacks
-- Detritus (sand/gravel)
-  - Dug up from soft surfaces using E-Tool
+- Detritus (dirt/gravel/stone)
+  - Dig with E-Tool
+- Sand
+  - Dig with E-Tool
 - Ore
+  - Dig with E-Tool
   - Harvested by drills
 
 ### Processed
@@ -63,13 +65,13 @@ Most resources exist physically in the world, either as a resource block or with
   - Refined from oil
 - Glass
   - Salvaged from glass props
-  - Smelted from detritus
+  - Smelted from glass
 - Plastic
   - Salvaged from plastic/rubber props
   - Smelted from oil
 - Cement
   - Salvaged from concrete props
-  - Refined from detritus
+  - Smelted from detritus
 - Chemicals
   - Salvaged from container props
   - Refined from ore
@@ -125,13 +127,13 @@ Consume power to **smelt** raw resources
 - Scrap -> Metal
 - Oil -> Plastic
 - Wood -> Coal
-- Detritus -> Glass
+- Sand -> Glass
+- Detritus -> Cement
 
 ### Refinery
 Consume power to **refine** raw resources
 - Ore -> Chemicals
 - Oil -> Fuel
-- Detritus -> Cement
 
 ### Foundry
 Consume power to **synthesize** refined resources
