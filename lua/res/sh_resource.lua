@@ -7,7 +7,7 @@ function RES.GenerateEntities()
         tbl.PrintName = v.Name
         tbl.Resource = k
         tbl.Spawnable = true
-        tbl.Category = "RES"
+        tbl.Category = "RES - Resources"
 
         scripted_ents.Register(tbl, "res_r_" .. k)
     end

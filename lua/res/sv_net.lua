@@ -1,5 +1,6 @@
 util.AddNetworkString("res_switchtool")
 util.AddNetworkString("res_salvageinfo")
+util.AddNetworkString("res_entdamage")
 
 net.Receive("res_switchtool", function(len, ply)
     local wep = ply:GetActiveWeapon()

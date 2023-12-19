@@ -38,9 +38,14 @@ function SWEP:ApplyCurrentTool()
 end
 
 function SWEP:SetCurrentTool(i)
-    if i == self:GetToolIndex() then return end
+    local prev_i = self:GetToolIndex()
+    if i == prev_i then return end
     if isstring(i) then i = tonumber(i) or (self.Tools[i] or {}).Index end
     assert(i ~= nil and self.ToolsIndex[i] ~= nil, "Tried to set invalid tool index \"" .. tostring(i) .. "\"!")
+
+    if SERVER then
+        self:CallOnClient("SetCurrentTool", tostring(i))
+    end
 
     self:SetToolIndex(i)
     self:ApplyCurrentTool()
@@ -53,13 +58,10 @@ function SWEP:SetCurrentTool(i)
         self:GetOwner():DoAnimationEvent(tool.DeployGesture)
     end
 
-    if isfunction(tool.Deploy) then
-        return tool.Deploy(self)
-    end
+    -- if isfunction(tool.OnToolSwitchIn) then
+    --     return tool.OnToolSwitchIn(self, prev_i)
+    -- end
 
-    if SERVER then
-        self:CallOnClient("SetCurrentTool", tostring(i))
-    end
 end
 
 function SWEP:WeaponIdle()
@@ -96,5 +98,12 @@ function SWEP:Think()
     local tool = self:GetCurrentTool()
     if isfunction(tool.Think) then
         return tool.Think(self)
+    end
+end
+
+function SWEP:OnRemove()
+    local tool = self:GetCurrentTool()
+    if isfunction(tool.OnRemove) then
+        return tool.OnRemove(self)
     end
 end

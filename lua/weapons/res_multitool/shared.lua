@@ -39,6 +39,19 @@ SWEP.HoldType = "slam"
 function SWEP:SetupDataTables()
     self:NetworkVar("Int", 0, "ToolIndex")
     self:NetworkVar("Float", 0, "WeaponIdleTime")
+    self:NetworkVar("Entity", 0, "Carrying")
+    self:NetworkVar("String", 0, "SelectedBuildable")
+
+    self:NetworkVarNotify("ToolIndex", function(ent, name, old, new)
+        local prev = self.ToolsIndex[old or 0]
+        if prev and isfunction(prev.OnToolSwitchOut) then
+            prev.OnToolSwitchOut(ent, new)
+        end
+        local next = self.ToolsIndex[new or 0]
+        if next and isfunction(next.OnToolSwitchIn) then
+            next.OnToolSwitchOut(ent, old)
+        end
+    end)
 end
 
 function SWEP:Initialize()
@@ -63,7 +76,18 @@ function SWEP:Deploy()
     end
 
     if isfunction(tool.Deploy) then
-        return tool.Deploy(self)
+        local v = tool.Deploy(self)
+        if v ~= nil then return v end
+    end
+
+    return true
+end
+
+function SWEP:Holster(wep)
+    local tool = self:GetCurrentTool()
+    if isfunction(tool.Holster) then
+        local v = tool.Holster(self, wep)
+        if v ~= nil then return v end
     end
 
     return true

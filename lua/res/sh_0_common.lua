@@ -339,7 +339,7 @@ RES.MaterialSalvage = {
         ["wood"] = 0.5,
     },
     ["plaster"] = {
-        ["plastic"] = 0.5,
+        ["cement"] = 0.5,
         ["wood"] = 0.5,
     },
     ["plastic_barrel"] = {
@@ -446,7 +446,8 @@ RES.SurfaceHarvest = {
     ["sand"] = {
         3,
         {
-            ["sand"] = 1,
+            ["detritus"] = 0.5,
+            ["sand"] = 0.5,
         },
     },
     ["gravel"] = {

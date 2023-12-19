@@ -14,10 +14,6 @@ SWEP.Tools.Crowbar.HoldType = "slam"
 SWEP.Tools.Crowbar.DeployAnim = ACT_VM_DRAW
 SWEP.Tools.Crowbar.DeployGesture = ACT_HL2MP_GESTURE_RANGE_ATTACK_SLAM
 
-SWEP.Tools.Crowbar.Deploy = function(self)
-    return true
-end
-
 SWEP.Tools.Crowbar.Highlight = function(self, ent)
     if IsValid(ent) and ent:RES_CanSalvage() then
         local info = ent:RES_GetSalvageInfo()
